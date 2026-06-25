@@ -1,0 +1,9 @@
+{
+  "elapsed_seconds": 536.998,
+  "exact_match_rate": 0.3227132579650565,
+  "hit_at_1": 0.5097636176772867,
+  "hit_at_3": 0.5107913669064749,
+  "mrr": 0.5102774922918808,
+  "num_examples": 973,
+  "task": "fault_localization"
+}

@@ -1,0 +1,45 @@
+{
+  "task": "summarization",
+  "source": "aggregate metrics from existing summarization rescore output",
+  "num_examples": 518,
+  "note": "This compact result file intentionally contains only aggregate metrics, not raw source-code examples or model generations.",
+  "metrics_are_percent": true,
+  "methods": {
+    "baseline_uniform": {
+      "paper_name": "Baseline",
+      "weight_mode": "uniform",
+      "BERTScore": 40.40,
+      "EmbeddingSim": 64.30,
+      "METEOR": 29.86,
+      "ROUGE1": 31.84,
+      "ROUGEL": 27.34
+    },
+    "scancoder_scanpath": {
+      "paper_name": "ScanCoder",
+      "weight_mode": "scanpath",
+      "BERTScore": 48.59,
+      "EmbeddingSim": 65.78,
+      "METEOR": 29.27,
+      "ROUGE1": 43.42,
+      "ROUGEL": 36.96
+    },
+    "cogcoder_workload": {
+      "paper_name": "CogCoder-Workload",
+      "weight_mode": "eeg_workload_or_eeg",
+      "BERTScore": 32.91,
+      "EmbeddingSim": 62.02,
+      "METEOR": 25.23,
+      "ROUGE1": 21.19,
+      "ROUGEL": 18.22
+    },
+    "cogcoder_hybrid": {
+      "paper_name": "CogCoder-Hybrid",
+      "weight_mode": "scanpath_eeg",
+      "BERTScore": 48.26,
+      "EmbeddingSim": 66.02,
+      "METEOR": 28.85,
+      "ROUGE1": 42.95,
+      "ROUGEL": 36.69
+    }
+  }
+}

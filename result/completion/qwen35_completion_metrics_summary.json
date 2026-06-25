@@ -1,0 +1,45 @@
+{
+  "task": "completion",
+  "source": "aggregate metrics from existing completion rescore output",
+  "num_examples": 1005,
+  "note": "This compact result file intentionally contains only aggregate metrics, not raw source-code examples or model generations.",
+  "metrics_are_percent": true,
+  "methods": {
+    "baseline_uniform": {
+      "paper_name": "Baseline",
+      "weight_mode": "uniform",
+      "CodeBLEU": 71.80,
+      "CrystalBLEU": 62.51,
+      "EmbeddingSim": 95.22,
+      "HybridExact": 46.22,
+      "NLS": 24.99
+    },
+    "scancoder_scanpath": {
+      "paper_name": "ScanCoder",
+      "weight_mode": "scanpath",
+      "CodeBLEU": 69.83,
+      "CrystalBLEU": 63.22,
+      "EmbeddingSim": 92.65,
+      "HybridExact": 45.72,
+      "NLS": 27.20
+    },
+    "cogcoder_workload": {
+      "paper_name": "CogCoder-Workload",
+      "weight_mode": "eeg_workload_or_eeg",
+      "CodeBLEU": 78.25,
+      "CrystalBLEU": 80.49,
+      "EmbeddingSim": 93.28,
+      "HybridExact": 64.38,
+      "NLS": 70.86
+    },
+    "cogcoder_hybrid": {
+      "paper_name": "CogCoder-Hybrid",
+      "weight_mode": "scanpath_eeg",
+      "CodeBLEU": 94.80,
+      "CrystalBLEU": 96.22,
+      "EmbeddingSim": 99.84,
+      "HybridExact": 93.88,
+      "NLS": 98.50
+    }
+  }
+}
