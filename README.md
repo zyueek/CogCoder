@@ -1,4 +1,4 @@
-# CogCoder Reviewer Artifact Scripts
+# CogCoder Artifact Scripts
 
 ## Directory Layout
 
