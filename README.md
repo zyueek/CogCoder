@@ -1,12 +1,18 @@
 # CogCoder
 
-Paper-reported results and the core weighted-loss component of CogCoder.
+Paper-reported results and selected core components of CogCoder.
 
 ## Core code
 
-[`scripts/weighted_loss.py`](scripts/weighted_loss.py) contains the token-weighted supervised-loss implementation extracted from the training code. It consumes prepared token weights and masks prompt labels with `-100`.
+| Script | Component |
+|---|---|
+| [`weighted_loss.py`](scripts/weighted_loss.py) | Token-weighted supervised loss |
+| [`scanpath_weights.py`](scripts/scanpath_weights.py) | Scanpath baseline weight functions |
+| [`data_collator.py`](scripts/data_collator.py) | Padding and collation of prepared examples |
+| [`faultloc_fusion.py`](scripts/faultloc_fusion.py) | Fault-localization prediction fusion |
+| [`faultloc_metrics.py`](scripts/faultloc_metrics.py) | Fault-localization set and ranking metrics |
 
-This repository provides the core implementation excerpt for inspection.
+These focused components are extracted from the experiment code for inspection.
 
 ## Results
 
