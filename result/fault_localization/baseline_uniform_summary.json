@@ -1,9 +1,13 @@
 {
-  "elapsed_seconds": 622.175,
+  "task": "fault_localization",
+  "paper_table": "II",
+  "paper_name": "Baseline",
+  "num_examples": 973,
+  "exact_match_definition": "set equality",
   "exact_match_rate": 0.08119218910585817,
   "hit_at_1": 0.48098663926002055,
   "hit_at_3": 0.48098663926002055,
   "mrr": 0.48098663926002055,
-  "num_examples": 973,
-  "task": "fault_localization"
+  "set_precision": 0.2975334018499486,
+  "set_f1": 0.3162915678588854
 }

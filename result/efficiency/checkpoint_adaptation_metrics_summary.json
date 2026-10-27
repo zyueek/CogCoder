@@ -1,0 +1,74 @@
+{
+  "paper_table": "III",
+  "value_source": "paper-reported",
+  "tasks": {
+    "completion": {
+      "baseline_uniform": {
+        "paper_name": "Baseline",
+        "quality_score": 12.75,
+        "quality_gain_pp": 0,
+        "mean_relative_drift": 0,
+        "drift_efficiency": null,
+        "late_drift_percent": null
+      },
+      "scancoder_scanpath": {
+        "paper_name": "ScanCoder",
+        "quality_score": 14.04,
+        "quality_gain_pp": 1.29,
+        "mean_relative_drift": 2.46,
+        "drift_efficiency": 0.53,
+        "late_drift_percent": 51.8
+      },
+      "cogcoder_workload": {
+        "paper_name": "CogCoder-Workload",
+        "quality_score": 62.84,
+        "quality_gain_pp": 50.09,
+        "mean_relative_drift": 2.54,
+        "drift_efficiency": 19.72,
+        "late_drift_percent": 52.2
+      },
+      "cogcoder_hybrid": {
+        "paper_name": "CogCoder-Hybrid",
+        "quality_score": 95.14,
+        "quality_gain_pp": 82.39,
+        "mean_relative_drift": 2.65,
+        "drift_efficiency": 31.07,
+        "late_drift_percent": 50.5
+      }
+    },
+    "summarization": {
+      "baseline_uniform": {
+        "paper_name": "Baseline",
+        "quality_score": 28.22,
+        "quality_gain_pp": 0,
+        "mean_relative_drift": 0,
+        "drift_efficiency": null,
+        "late_drift_percent": null
+      },
+      "scancoder_scanpath": {
+        "paper_name": "ScanCoder",
+        "quality_score": 54.33,
+        "quality_gain_pp": 26.11,
+        "mean_relative_drift": 22.49,
+        "drift_efficiency": 1.16,
+        "late_drift_percent": 45.6
+      },
+      "cogcoder_workload": {
+        "paper_name": "CogCoder-Workload",
+        "quality_score": 54.84,
+        "quality_gain_pp": 26.61,
+        "mean_relative_drift": 22.38,
+        "drift_efficiency": 1.19,
+        "late_drift_percent": 45.5
+      },
+      "cogcoder_hybrid": {
+        "paper_name": "CogCoder-Hybrid",
+        "quality_score": 54.63,
+        "quality_gain_pp": 26.4,
+        "mean_relative_drift": 22.3,
+        "drift_efficiency": 1.18,
+        "late_drift_percent": 45.6
+      }
+    }
+  }
+}

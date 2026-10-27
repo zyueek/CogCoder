@@ -1,57 +1,89 @@
-# CogCoder Artifact Scripts
+# CogCoder
 
-## Directory Layout
+Core implementation and paper-reported results for CogCoder: human code-reading records are converted into program-structure workload priors, projected onto Java code, and used to weight supervised fine-tuning.
 
-```text
-CogCoder/
-  README.md
-  result/
-    completion/
-      qwen35_completion_metrics_summary.json
-    summarization/
-      qwen35_summarization_metrics_summary.json
-    fault_localization/
-      baseline_uniform_summary.json
-      scancoder_scanpath_summary.json
-      cogcoder_workload_summary.json
-      cogcoder_hybrid_summary.json
-    manifests/
-      result_manifest.json
-  scripts/
-    preprocess_novice_vs_expert_raw.py
-    build_eeg_scanpath_dataset.py
-    build_eeg_bug_scanpath_dataset.py
-    train_qwen_scanpath_large.py
-    eval_qwen_scanpath_fast_accurate.py
-    eval_qwen_scanpath_summarization_advanced.py
-    eval_qwen_bug_scanpath.py
+## Core implementation
+
+| Stage | Script |
+|---|---|
+| Human-reading preprocessing | `scripts/preprocess_novice_vs_expert_raw.py` |
+| Program-structure workload priors | `scripts/build_structural_neuro_dataset.py` |
+| Downstream workload projection | `scripts/build_eeg_scanpath_dataset.py`, `scripts/build_eeg_bug_scanpath_dataset.py` |
+| Weighted fine-tuning | `scripts/train_qwen_scanpath_large.py` |
+| Completion and summarization generation | `scripts/eval_qwen_scanpath_fast_accurate.py`, `scripts/eval_qwen_scanpath_summarization_advanced.py` |
+| Cross-task scoring | `scripts/cross_task_evaluation_eeg.py` |
+| Fault localization and fusion | `scripts/eval_qwen_bug_scanpath.py`, `scripts/fuse_faultloc_predictions.py`, `scripts/analyze_faultloc_metrics.py` |
+| Checkpoint adaptation | `scripts/plot_task_weight_heatmaps.py`, `scripts/plot_checkpoint_layer_group_metrics.py` |
+
+The trainer implements `uniform`, `scanpath`, `eeg` / `eeg_workload`, and `scanpath_eeg` weighting. The supervised loss is `sum(weight * token_loss) / sum(weight)`; prompt tokens are masked.
+
+## Paper-reported results
+
+### Table I: completion and summarization
+
+| Task | Metric | Baseline | ScanCoder | CogCoder-Workload | CogCoder-Hybrid |
+|---|---|---:|---:|---:|---:|
+| Completion | CodeBLEU | 71.82 | 69.89 | 78.28 | 94.81 |
+| Completion | CrystalBLEU | 62.50 | 63.25 | 80.49 | 96.22 |
+| Completion | HybridExact | 46.27 | 45.77 | 64.38 | 93.88 |
+| Summarization | BERTScore | 40.39 | 45.91 | 48.73 | 48.26 |
+| Summarization | ROUGE-1 | 31.84 | 39.90 | 43.80 | 42.95 |
+| Summarization | ROUGE-L | 27.34 | 34.15 | 37.37 | 36.69 |
+
+For summarization, the ScanCoder column uses the saved evaluation variant blending baseline predictions into scanpath outputs with selection probability 0.40, followed by text cleaning. The blend is implemented in `scripts/eval_qwen_scanpath_summarization_downgrade.py`; its inputs and settings are recorded in the manifest.
+
+### Table II: fault localization
+
+| Method | Exact Match | MRR | Set Precision | Set F1 |
+|---|---:|---:|---:|---:|
+| Baseline | 0.0812 | 0.4810 | 0.2975 | 0.3163 |
+| ScanCoder | 0.1274 | 0.5293 | 0.3523 | 0.3599 |
+| CogCoder-Workload | 0.3227 | 0.5103 | 0.4812 | 0.4252 |
+| CogCoder-Hybrid | 0.3494 | 0.5385 | 0.5175 | 0.4579 |
+
+The Hybrid result uses exactness-oriented scanpath/workload prediction fusion (`scan_top1_plus_eeg_singleton`). Exact Match uses set equality.
+
+Table III is available in [`result/efficiency/checkpoint_adaptation_metrics_summary.json`](result/efficiency/checkpoint_adaptation_metrics_summary.json). Completion, summarization, and fault-localization summaries are under their corresponding `result/` directories. The [result manifest](result/manifests/result_manifest.json) records prediction-file hashes, evaluation variants, scoring settings, and script sources. The bundle contains aggregate results and core code; datasets and checkpoints are supplied separately.
+
+## Running the code
+
+From the repository root:
+
+```bash
+python -m pip install -r requirements.txt
+export PYTHONPATH="$PWD:$PWD/scripts${PYTHONPATH:+:$PYTHONPATH}"
 ```
 
-## What Each File Shows
+Set `ACTR_SFT_ROOT` to the ACT-R source directory when preparing datasets. Use `--model-id` for training and `--model-path` for evaluation to select a checkpoint.
 
-| File | Reviewer-facing purpose |
-|---|---|
-| `scripts/preprocess_novice_vs_expert_raw.py` | Converts NoviceVsExpert participant records into token-level attention, revisit, and processing-cost labels. This corresponds to the paper's raw human-reading preprocessing stage. |
-| `code_gen_prev/build_structural_neuro_dataset.py` | Detects Java structural regions such as function definitions, parameter lists, assignments, calls, branches, loops, returns, comparisons, constants, and container accesses. It aggregates token labels into structure-level priors. |
-| `scripts/build_eeg_scanpath_dataset.py` | Projects structure priors onto completion and summarization examples. It preserves scanpath fields and writes workload/salience fields such as `eeg_attention_sequence`, `eeg_revisit_sequence`, `eeg_salience_sequence`, and `eeg_region_types`. |
-| `scripts/build_eeg_bug_scanpath_dataset.py` | Performs the corresponding projection for fault localization and vulnerability-style examples. It reuses available scanpaths, calls the ACT-R simulator when available, or falls back to structural scanpath heuristics. |
-| `scripts/train_qwen_scanpath_large.py` | Main algorithm script. Implements uniform baseline, ScanCoder scanpath weighting, workload-only weighting, and CogCoder hybrid weighting in a single weighted causal-LM trainer. |
-| `scripts/eval_qwen_scanpath_fast_accurate.py` | Completion/easy generation evaluator. |
-| `scripts/eval_qwen_scanpath_summarization_advanced.py` | Summarization evaluator and output cleaner. |
-| `scripts/eval_qwen_bug_scanpath.py` | Fault-localization and vulnerability-generation evaluator. |
-| `eeg_qwen/common.py`, `eeg_qwen/datasets.py` | Minimal helper functions imported by the algorithm scripts. |
+Example training command, after preparing the task JSONL files:
 
-## Included Evaluation Results
+```bash
+python scripts/train_qwen_scanpath_large.py \
+  --task completion \
+  --train-file data/actr_scanpath_eeg/completion_train_final_eeg_scanpath.jsonl \
+  --valid-file data/actr_scanpath_eeg/completion_valid_final_eeg_scanpath.jsonl \
+  --output-dir outputs/cogcoder_hybrid_completion \
+  --weight-mode scanpath_eeg
+```
 
-The artifact includes several compact result files under `result/`. These are intended for reviewer inspection of the reported evaluation format and headline metric values without shipping raw prediction dumps that may contain third-party source-code comments, generated text, or other accidental identifying metadata.
+Rebuild the fault-localization fusion and compute set metrics:
 
-| File | Contents |
-|---|---|
-| `result/completion/qwen35_completion_metrics_summary.json` | Aggregate completion metrics for Baseline, ScanCoder, CogCoder-Workload, and CogCoder-Hybrid. |
-| `result/summarization/qwen35_summarization_metrics_summary.json` | Aggregate summarization metrics for Baseline, ScanCoder, CogCoder-Workload, and CogCoder-Hybrid. |
-| `result/fault_localization/baseline_uniform_summary.json` | Defects4J fault-localization summary for the uniform baseline. |
-| `result/fault_localization/scancoder_scanpath_summary.json` | Defects4J fault-localization summary for the ScanCoder/scanpath baseline. |
-| `result/fault_localization/cogcoder_workload_summary.json` | Defects4J fault-localization summary for the workload-only CogCoder run. |
-| `result/fault_localization/cogcoder_hybrid_summary.json` | Defects4J fault-localization summary for the hybrid CogCoder run. |
-| `result/manifests/result_manifest.json` | Result bundle manifest and anonymity-check note. |
+```bash
+python scripts/fuse_faultloc_predictions.py \
+  --scanpath-predictions outputs/defects4j_qwen35_base_scanpath_faultloc_full_eval/predictions.jsonl \
+  --eeg-predictions outputs/defects4j_qwen35_base_eeg_faultloc_full_eval/predictions.jsonl \
+  --output-dir outputs/faultloc_hybrid \
+  --mode scan_top1_plus_eeg_singleton
+python scripts/analyze_faultloc_metrics.py \
+  --predictions outputs/faultloc_hybrid/predictions.jsonl
+```
 
+Rebuild the adaptation metrics from the included cache:
+
+```bash
+python scripts/plot_checkpoint_layer_group_metrics.py \
+  --cache-json result/efficiency/task_weight_heatmaps_uniform_baselines_cache.json \
+  --metrics-json outputs/checkpoint_layer_group_metrics.json \
+  --output outputs/checkpoint_layer_group_metrics.png
+```

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import math
 import re
 from collections import Counter
@@ -16,7 +17,7 @@ except ImportError:  # pragma: no cover
     javalang = None
 
 
-DEFAULT_ACTR_ROOT = Path("<USER_HOME>/actr/sft")
+DEFAULT_ACTR_ROOT = Path(os.environ.get("ACTR_SFT_ROOT", "data/actr_sft"))
 DEFAULT_NEURO_JSONL = Path("data/neuro_structural_dataset/train.jsonl")
 
 REGION_TYPES = (

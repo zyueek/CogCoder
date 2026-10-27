@@ -1,9 +1,13 @@
 {
-  "elapsed_seconds": 536.998,
+  "task": "fault_localization",
+  "paper_table": "II",
+  "paper_name": "CogCoder-Workload",
+  "num_examples": 973,
+  "exact_match_definition": "set equality",
   "exact_match_rate": 0.3227132579650565,
   "hit_at_1": 0.5097636176772867,
   "hit_at_3": 0.5107913669064749,
   "mrr": 0.5102774922918808,
-  "num_examples": 973,
-  "task": "fault_localization"
+  "set_precision": 0.48115793079821856,
+  "set_f1": 0.4251718749957092
 }

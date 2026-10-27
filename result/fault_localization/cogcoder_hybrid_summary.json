@@ -1,9 +1,15 @@
 {
-  "elapsed_seconds": 622.386,
-  "exact_match_rate": 0.08016443987667009,
-  "hit_at_1": 0.48201438848920863,
-  "hit_at_3": 0.5025693730729702,
-  "mrr": 0.49229188078108943,
+  "task": "fault_localization",
+  "paper_table": "II",
+  "paper_name": "CogCoder-Hybrid",
   "num_examples": 973,
-  "task": "fault_localization"
+  "exact_match_definition": "set equality",
+  "exact_match_rate": 0.3494347379239466,
+  "hit_at_1": 0.526207605344296,
+  "hit_at_3": 0.5508735868448099,
+  "mrr": 0.538540596094553,
+  "set_precision": 0.5174717368961973,
+  "set_f1": 0.45787944275609693,
+  "evaluation_variant": "scanpath/workload prediction fusion",
+  "fusion_mode": "scan_top1_plus_eeg_singleton"
 }

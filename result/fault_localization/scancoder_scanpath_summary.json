@@ -1,9 +1,13 @@
 {
-  "elapsed_seconds": 614.475,
+  "task": "fault_localization",
+  "paper_table": "II",
+  "paper_name": "ScanCoder",
+  "num_examples": 973,
+  "exact_match_definition": "set equality",
   "exact_match_rate": 0.12744090441932168,
   "hit_at_1": 0.526207605344296,
   "hit_at_3": 0.5323741007194245,
   "mrr": 0.5292908530318602,
-  "num_examples": 973,
-  "task": "fault_localization"
+  "set_precision": 0.35234669407331276,
+  "set_f1": 0.35992169181130196
 }

@@ -55,7 +55,7 @@ TASK_PROMPTS = {
     },
 }
 
-DEFAULT_QWEN35_BASE = "<USER_HOME>/.cache/huggingface/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+DEFAULT_QWEN35_BASE = os.environ.get("QWEN35_BASE_PATH", "Qwen/Qwen3.5-4B")
 DEFAULT_QWEN35_BASE_ID = "Qwen/Qwen3.5-4B"
 DEFAULT_QWEN35_INSTRUCT_ID = "Qwen/Qwen3.5-4B-Instruct"
 
